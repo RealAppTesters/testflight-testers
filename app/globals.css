@@ -740,6 +740,46 @@ body {
   padding: 2px 0;
 }
 
+/* ─── radio buttons for testing type ─── */
+.test-radio-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.test-radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 10px 14px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+  background: var(--bg);
+  margin: 0;
+}
+
+.test-radio-group label:hover {
+  border-color: var(--primary-light);
+}
+
+.test-radio-group input[type="radio"] {
+  display: none;
+}
+
+.test-radio-group input[type="radio"]:checked + span {
+  color: var(--primary);
+}
+
+.test-radio-group label.selected {
+  border-color: var(--primary);
+  background: rgba(108, 60, 224, 0.06);
+  box-shadow: 0 0 0 3px rgba(108, 60, 224, 0.08);
+}
+
 /* ─── testing types explanation ─── */
 .testing-types-grid {
   display: grid;
@@ -1122,6 +1162,9 @@ body {
   .footer {
     grid-template-columns: 1fr;
     gap: 24px;
+  }
+  .test-radio-group {
+    grid-template-columns: 1fr;
   }
   .mockup-grid {
     grid-template-columns: 1fr;
