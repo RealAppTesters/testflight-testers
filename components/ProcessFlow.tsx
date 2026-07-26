@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 export default function ProcessFlow() {
   const steps = [
     { icon: "fa-code", label: "Developer" },
@@ -11,15 +13,20 @@ export default function ProcessFlow() {
   return (
     <div className="process-flow">
       {steps.map((step, index) => (
-        <>
-          <div className="process-step" key={index}>
-            <div className="icon-circle"><i className={`fas ${step.icon}`}></i></div>
+        <Fragment key={index}>
+          <div className="process-step">
+            <div className="icon-circle">
+              <i className={`fas ${step.icon}`}></i>
+            </div>
             <span className="label">{step.label}</span>
           </div>
+
           {index < steps.length - 1 && (
-            <div className="process-arrow"><i className="fas fa-arrow-right"></i></div>
+            <div className="process-arrow">
+              <i className="fas fa-arrow-right"></i>
+            </div>
           )}
-        </>
+        </Fragment>
       ))}
     </div>
   );
