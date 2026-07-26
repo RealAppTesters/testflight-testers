@@ -1,35 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
-interface TestType {
-  id: string;
-  label: string;
-  checked: boolean;
-}
+import { useState } from "react";
 
 export default function PricingCalculator() {
-  const [testTypes, setTestTypes] = useState<TestType[]>([
-    { id: "functionality", label: "App functionality", checked: true },
-    { id: "ux", label: "User experience", checked: true },
-    { id: "bug", label: "Bug hunting", checked: true },
-    { id: "performance", label: "Performance", checked: false },
-    { id: "localization", label: "Localization", checked: false },
-    { id: "accessibility", label: "Accessibility", checked: false },
-  ]);
-
+  const [selectedType, setSelectedType] = useState("functionality");
   const [testers, setTesters] = useState(5);
   const [hours, setHours] = useState(1);
   const [delivery, setDelivery] = useState("standard");
 
   const BASE_RATE = 10;
+
+  const testTypes = [
+    { id: "functionality", label: "App functionality" },
+    { id: "ux", label: "User experience" },
+    { id: "bug", label: "Bug hunting" },
+    { id: "performance", label: "Performance" },
+    { id: "localization", label: "Localization" },
+    { id: "accessibility", label: "Accessibility" },
+  ];
+
   const typeLabels: Record<string, string> = {
-    functionality: "Functional",
-    ux: "UX",
+    functionality: "Functional Testing",
+    ux: "UX Testing",
     bug: "Bug Hunting",
-    performance: "Performance",
-    localization: "Localization",
-    accessibility: "Accessibility",
+    performance: "Performance Testing",
+    localization: "Localization Testing",
+    accessibility: "Accessibility Testing",
   };
 
   const deliveryNames: Record<string, string> = {
@@ -44,37 +40,25 @@ export default function PricingCalculator() {
     express: 5,
   };
 
-  const handleCheckboxChange = (id: string) => {
-    setTestTypes((prev) =>
-      prev.map((type) =>
-        type.id === id ? { ...type, checked: !type.checked } : type
-      )
-    );
-  };
-
-  const getCheckedTypes = () => testTypes.filter((t) => t.checked);
-  const numTypes = getCheckedTypes().length || 1;
   const surcharge = deliverySurcharges[delivery] || 0;
-  const perTester = BASE_RATE * numTypes * hours + surcharge;
+  const perTester = BASE_RATE * hours + surcharge;
   const total = perTester * testers;
-
-  const typeNames = getCheckedTypes()
-    .map((t) => typeLabels[t.id] || t.id)
-    .join(", ");
 
   return (
     <div className="calculator-wrap">
       <div className="calc-grid">
         <div>
           <div className="calc-field">
-            <label>What do you want tested? (select all that apply)</label>
-            <div className="test-checkboxes">
+            <label>Select Testing Type</label>
+            <div className="test-radio-group">
               {testTypes.map((type) => (
-                <label key={type.id}>
+                <label key={type.id} className={selectedType === type.id ? "selected" : ""}>
                   <input
-                    type="checkbox"
-                    checked={type.checked}
-                    onChange={() => handleCheckboxChange(type.id)}
+                    type="radio"
+                    name="testType"
+                    value={type.id}
+                    checked={selectedType === type.id}
+                    onChange={() => setSelectedType(type.id)}
                   />
                   <span>{type.label}</span>
                 </label>
@@ -98,7 +82,7 @@ export default function PricingCalculator() {
           </div>
 
           <div className="calc-field">
-            <label>Hours per Tester (per testing type)</label>
+            <label>Hours per Tester</label>
             <div className="hours-control">
               <button onClick={() => setHours(Math.max(1, hours - 1))}>−</button>
               <input
@@ -124,7 +108,13 @@ export default function PricingCalculator() {
                     checked={delivery === value}
                     onChange={() => setDelivery(value)}
                   />
-                  <span>{value === "standard" ? "Standard" : value === "priority" ? "Priority (+$2/tester)" : "Express (+$5/tester)"}</span>
+                  <span>
+                    {value === "standard"
+                      ? "Standard"
+                      : value === "priority"
+                      ? "Priority (+$2/tester)"
+                      : "Express (+$5/tester)"}
+                  </span>
                 </label>
               ))}
             </div>
@@ -133,18 +123,33 @@ export default function PricingCalculator() {
 
         <div>
           <div className="calc-result">
-            <div className="row"><span>Base price per tester</span><span>${perTester}</span></div>
-            <div className="row"><span>Testers</span><span>{testers}</span></div>
-            <div className="row"><span>Hours per tester</span><span>{hours}</span></div>
-            <div className="row"><span>Testing types</span><span>{numTypes}</span></div>
-            <div className="row"><span>Delivery</span><span>{deliveryNames[delivery]}</span></div>
+            <div className="row">
+              <span>Testing type</span>
+              <span style={{ fontWeight: 600 }}>{typeLabels[selectedType]}</span>
+            </div>
+            <div className="row">
+              <span>Price per tester</span>
+              <span>${perTester}</span>
+            </div>
+            <div className="row">
+              <span>Testers</span>
+              <span>{testers}</span>
+            </div>
+            <div className="row">
+              <span>Hours per tester</span>
+              <span>{hours}</span>
+            </div>
+            <div className="row">
+              <span>Delivery</span>
+              <span>{deliveryNames[delivery]}</span>
+            </div>
             <div className="row total">
               <span>Total</span>
               <span className="price">${total}</span>
             </div>
             <div className="breakdown">
-              <span>{numTypes} types: {typeNames || "None selected"}</span>
-              <span>{hours}h per type × ${BASE_RATE} = ${BASE_RATE * numTypes * hours}/tester</span>
+              <span>{typeLabels[selectedType]}</span>
+              <span>{hours}h × ${BASE_RATE} = ${BASE_RATE * hours}/tester</span>
               {surcharge > 0 && <span>Delivery surcharge: +${surcharge}/tester</span>}
               <span>{testers} testers × ${perTester} = ${total}</span>
             </div>
