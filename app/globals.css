@@ -438,6 +438,424 @@ body {
   }
 }
 
+/* ─── Payment Success Page ─── */
+.payment-success-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: var(--bg);
+}
+
+.payment-success-card {
+  max-width: 720px;
+  width: 100%;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 48px 40px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+/* Success Header */
+.success-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.success-icon {
+  font-size: 4rem;
+  color: var(--mint);
+  margin-bottom: 16px;
+}
+
+.success-header h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+
+.success-subtitle {
+  color: var(--gray);
+  font-size: 1rem;
+}
+
+/* Order Details */
+.order-details {
+  background: var(--bg);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.order-id-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.order-id-label {
+  font-size: 0.85rem;
+  color: var(--gray);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.order-id-value {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  color: var(--gray);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: var(--transition);
+  font-size: 0.9rem;
+}
+
+.copy-btn:hover {
+  color: var(--primary);
+  background: rgba(108, 60, 224, 0.06);
+}
+
+.order-summary-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 0.95rem;
+  color: var(--gray);
+}
+
+.detail-value {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.total-detail {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+.total-amount {
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+/* Next Steps */
+.next-steps {
+  margin-bottom: 32px;
+}
+
+.next-steps h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.next-steps > p {
+  color: var(--gray);
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+}
+
+.steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--bg);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  background: var(--primary);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.step-item div strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.step-item div p {
+  font-size: 0.85rem;
+  color: var(--gray);
+}
+
+/* Contact Options */
+.contact-options {
+  margin-bottom: 32px;
+}
+
+.contact-options h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.contact-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.contact-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 16px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg);
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.contact-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.contact-btn.whatsapp {
+  border-color: #25D366;
+  color: #25D366;
+}
+
+.contact-btn.whatsapp:hover {
+  background: #25D366;
+  color: white;
+  border-color: #25D366;
+}
+
+.contact-btn.email {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.contact-btn.email:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.contact-btn-sub {
+  font-size: 0.7rem;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+.contact-btn.whatsapp:hover .contact-btn-sub,
+.contact-btn.email:hover .contact-btn-sub {
+  opacity: 0.9;
+}
+
+.contact-btn i {
+  font-size: 1.4rem;
+}
+
+/* What to Send */
+.what-to-send {
+  background: rgba(108, 60, 224, 0.04);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+  border: 1px solid rgba(108, 60, 224, 0.08);
+}
+
+.what-to-send h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.send-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.send-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.send-item i {
+  font-size: 1.2rem;
+  color: var(--primary);
+  width: 24px;
+  text-align: center;
+}
+
+.send-item div strong {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.send-item div p {
+  font-size: 0.85rem;
+  color: var(--gray);
+}
+
+.order-id-highlight {
+  background: var(--primary);
+  color: white;
+  padding: 1px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+/* Success Actions */
+.success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.success-actions .btn-primary,
+.success-actions .btn-outline {
+  width: 100%;
+  justify-content: center;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+}
+
+.success-actions .whatsapp-btn {
+  background: #25D366;
+  border-color: #25D366;
+  color: white;
+}
+
+.success-actions .whatsapp-btn:hover {
+  background: #1da851;
+  border-color: #1da851;
+}
+
+.success-actions .email-btn {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: transparent;
+}
+
+.success-actions .email-btn:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.success-actions .home-btn {
+  border-color: var(--border);
+  color: var(--gray);
+}
+
+.success-actions .home-btn:hover {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+/* Support Note */
+.support-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--gray);
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.support-note i {
+  color: var(--primary);
+}
+
+.support-note a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.support-note a:hover {
+  text-decoration: underline;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .payment-success-card {
+    padding: 32px 20px;
+  }
+
+  .success-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .contact-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .order-id-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .send-item {
+    align-items: flex-start;
+  }
+
+  .send-item i {
+    margin-top: 2px;
+  }
+}
 
 /* ─── hero ─── */
 .hero {
