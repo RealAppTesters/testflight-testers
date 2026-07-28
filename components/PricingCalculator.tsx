@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function PricingCalculator() {
+  const router = useRouter();
   const [selectedType, setSelectedType] = useState("functionality");
   const [testers, setTesters] = useState(5);
   const [hours, setHours] = useState(1);
@@ -43,6 +45,22 @@ export default function PricingCalculator() {
   const surcharge = deliverySurcharges[delivery] || 0;
   const perTester = BASE_RATE * hours + surcharge;
   const total = perTester * testers;
+
+  const handleStartTesting = () => {
+    // Store order details in sessionStorage for the payment page
+    const orderData = {
+      type: selectedType,
+      typeLabel: typeLabels[selectedType],
+      testers,
+      hours,
+      delivery,
+      perTester,
+      total,
+      currency: "USD",
+    };
+    sessionStorage.setItem("orderData", JSON.stringify(orderData));
+    router.push("/payment");
+  };
 
   return (
     <div className="calculator-wrap">
@@ -153,9 +171,9 @@ export default function PricingCalculator() {
               {surcharge > 0 && <span>Delivery surcharge: +${surcharge}/tester</span>}
               <span>{testers} testers × ${perTester} = ${total}</span>
             </div>
-            <a href="#" className="btn-primary">
+            <button className="btn-primary" onClick={handleStartTesting}>
               <i className="fas fa-rocket"></i> Start Testing
-            </a>
+            </button>
           </div>
         </div>
       </div>
