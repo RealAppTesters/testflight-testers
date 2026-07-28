@@ -85,16 +85,20 @@ export default function PaymentPage() {
   }, [router]);
 
   const handlePaymentSuccess = (details: any) => {
-    setPaymentStatus("success");
-    // Log the successful payment
-    console.log("Payment completed successfully:", details);
-    
-    // Clear order data from session
-    sessionStorage.removeItem("orderData");
-    
-    // You can also send this to your backend
-    // fetch('/api/orders', { method: 'POST', body: JSON.stringify(details) })
-  };
+  setPaymentStatus("success");
+  
+  // Store order ID in session
+  if (orderData) {
+    const orderId = `TFT-${Date.now().toString().slice(-6)}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+    sessionStorage.setItem("orderData", JSON.stringify({
+      ...orderData,
+      orderId: orderId
+    }));
+  }
+  
+  // Redirect to success page
+  router.push("/payment/success");
+};
 
   const handlePaymentError = (error: any) => {
     setPaymentStatus("error");
