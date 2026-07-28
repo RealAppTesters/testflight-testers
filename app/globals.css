@@ -152,6 +152,230 @@ body {
   border: none;
 }
 
+/* ─── Payment page styles ─── */
+.payment-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: var(--bg);
+}
+
+.payment-card {
+  max-width: 600px;
+  width: 100%;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 48px 40px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.payment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.payment-logo {
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: -0.03em;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.payment-logo .accent {
+  background: var(--primary);
+  color: white;
+  padding: 2px 10px;
+  border-radius: 40px;
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  font-weight: 700;
+}
+
+.payment-step {
+  font-size: 0.8rem;
+  color: var(--gray);
+  font-weight: 600;
+  background: var(--bg);
+  padding: 4px 14px;
+  border-radius: 40px;
+}
+
+.payment-title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+
+.payment-subtitle {
+  color: var(--gray);
+  font-size: 1rem;
+  margin-bottom: 32px;
+}
+
+.order-summary {
+  background: var(--bg);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+}
+
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 0.95rem;
+  color: var(--gray);
+}
+
+.order-value {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.order-divider {
+  border-top: 1px solid var(--border);
+  margin: 12px 0;
+}
+
+.total-row {
+  font-size: 1.1rem;
+}
+
+.total-row .order-value,
+.total-row .order-total {
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--primary);
+}
+
+.payment-methods {
+  margin-bottom: 32px;
+}
+
+.payment-methods h3 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.payment-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.payment-option.selected {
+  border-color: var(--primary);
+  background: rgba(108, 60, 224, 0.04);
+}
+
+.payment-option-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.payment-option-check {
+  font-size: 1.2rem;
+}
+
+.payment-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.payment-actions .btn-primary,
+.payment-actions .btn-outline {
+  flex: 1;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.payment-secure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+  font-size: 0.85rem;
+  color: var(--gray);
+}
+
+.payment-secure i {
+  color: var(--mint);
+}
+
+/* ─── Radio buttons for testing type ─── */
+.test-radio-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.test-radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 10px 14px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+  background: var(--bg);
+  margin: 0;
+}
+
+.test-radio-group label:hover {
+  border-color: var(--primary-light);
+}
+
+.test-radio-group input[type="radio"] {
+  display: none;
+}
+
+.test-radio-group input[type="radio"]:checked + span {
+  color: var(--primary);
+}
+
+.test-radio-group label.selected {
+  border-color: var(--primary);
+  background: rgba(108, 60, 224, 0.06);
+  box-shadow: 0 0 0 3px rgba(108, 60, 224, 0.08);
+}
+
+@media (max-width: 768px) {
+  .test-radio-group {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-card {
+    padding: 32px 20px;
+  }
+
+  .payment-title {
+    font-size: 1.6rem;
+  }
+
+  .payment-actions {
+    flex-direction: column;
+  }
+}
+
 /* ─── hero ─── */
 .hero {
   position: relative;
