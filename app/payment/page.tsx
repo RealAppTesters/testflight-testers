@@ -14,17 +14,23 @@ interface OrderData {
   perTester: number;
   total: number;
   currency: string;
+  customerEmail?: string;
+  customerName?: string;
+  customerPhone?: string;
 }
 
-// PayPal client ID - replace with your actual client ID
-// For South Africa, you'll need a PayPal Business account
 const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "sb";
 
-// PayPal button wrapper component
-function PayPalButtonWrapper({ amount, onSuccess, onError }: { 
+function PayPalButtonWrapper({ 
+  amount, 
+  onSuccess, 
+  onError,
+  orderData 
+}: { 
   amount: number; 
   onSuccess: (details: any) => void;
   onError: (error: any) => void;
+  orderData: OrderData;
 }) {
   const [{ isPending }] = usePayPalScriptReducer();
 
@@ -45,11 +51,17 @@ function PayPalButtonWrapper({ amount, onSuccess, onError }: {
                     value: amount.toFixed(2),
                     currency_code: "USD",
                   },
-                  description: "TestFlight QA Testing Services",
+                  description: `${orderData.typeLabel} - ${orderData.testers} testers × ${orderData.hours}h`,
                 },
               ],
               application_context: {
                 shipping_preference: "NO_SHIPPING",
+              },
+              payer: {
+                email_address: orderData.customerEmail || undefined,
+                name: {
+                  given_name: orderData.customerName || undefined,
+                },
               },
             });
           }}
@@ -73,11 +85,17 @@ export default function PaymentPage() {
   const [loading, setLoading] = useState(true);
   const [paymentStatus, setPaymentStatus] = useState<"idle" | "processing" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [customerDetails, setCustomerDetails] = useState({
+    email: '',
+    name: '',
+    phone: '',
+  });
 
   useEffect(() => {
     const stored = sessionStorage.getItem("orderData");
     if (stored) {
-      setOrderData(JSON.parse(stored));
+      const data = JSON.parse(stored);
+      setOrderData(data);
     } else {
       router.push("/");
     }
@@ -85,30 +103,67 @@ export default function PaymentPage() {
   }, [router]);
 
   const handlePaymentSuccess = (details: any) => {
-  setPaymentStatus("success");
-  
-  // Store order ID in session
-  if (orderData) {
-    const orderId = `TFT-${Date.now().toString().slice(-6)}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
-    sessionStorage.setItem("orderData", JSON.stringify({
-      ...orderData,
-      orderId: orderId
-    }));
-  }
-  
-  // Redirect to success page
-  router.push("/payment/success");
-};
+    setPaymentStatus("success");
+    
+    // Store order with customer details and generated ID
+    if (orderData) {
+      const orderId = `TFT-${Date.now().toString().slice(-6)}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+      const completeOrderData = {
+        ...orderData,
+        orderId: orderId,
+        customerEmail: customerDetails.email || details.payer?.email_address || '',
+        customerName: customerDetails.name || details.payer?.name?.given_name || '',
+        customerPhone: customerDetails.phone || '',
+        paypalOrderId: details.id,
+        status: 'confirmed',
+      };
+      
+      // Store in session for the success page
+      sessionStorage.setItem("orderData", JSON.stringify(completeOrderData));
+      
+      // Send to webhook for processing
+      fetch('/api/webhooks/paypal', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          resource: {
+            id: details.id,
+            payer: {
+              email_address: customerDetails.email || details.payer?.email_address,
+              name: {
+                given_name: customerDetails.name || details.payer?.name?.given_name,
+              },
+              phone: {
+                phone_number: {
+                  national_number: customerDetails.phone || '',
+                }
+              }
+            },
+            purchase_units: [
+              {
+                amount: {
+                  value: orderData.total.toFixed(2),
+                  currency_code: 'USD',
+                },
+                description: `${orderData.typeLabel} - ${orderData.testers} testers`,
+              }
+            ]
+          },
+          event_type: 'PAYMENT.CAPTURE.COMPLETED'
+        }),
+      });
+    }
+    
+    // Redirect to success page
+    router.push("/payment/success");
+  };
 
   const handlePaymentError = (error: any) => {
     setPaymentStatus("error");
     setErrorMessage(error.message || "There was an error processing your payment. Please try again.");
     console.error("Payment error:", error);
-  };
-
-  const handleRetry = () => {
-    setPaymentStatus("idle");
-    setErrorMessage("");
   };
 
   if (loading) {
@@ -137,45 +192,6 @@ export default function PaymentPage() {
     );
   }
 
-  // Success state
-  if (paymentStatus === "success") {
-    return (
-      <div className="payment-container">
-        <div className="payment-card" style={{ textAlign: "center", padding: "48px 40px" }}>
-          <div style={{ fontSize: "4rem", color: "var(--mint)", marginBottom: "20px" }}>
-            <i className="fas fa-check-circle"></i>
-          </div>
-          <h2 style={{ marginBottom: "12px" }}>Payment Successful! 🎉</h2>
-          <p style={{ color: "var(--gray)", marginBottom: "24px" }}>
-            Your TestFlight QA testing order has been confirmed. We'll start testing within 24 hours.
-          </p>
-          <div className="order-summary" style={{ textAlign: "left" }}>
-            <div className="order-row">
-              <span>Order ID</span>
-              <span className="order-value">#TFT-{Date.now().toString().slice(-6)}</span>
-            </div>
-            <div className="order-row">
-              <span>Testing Type</span>
-              <span className="order-value">{orderData.typeLabel}</span>
-            </div>
-            <div className="order-row">
-              <span>Total Paid</span>
-              <span className="order-value" style={{ color: "var(--mint)" }}>${orderData.total} USD</span>
-            </div>
-          </div>
-          <div style={{ display: "flex", gap: "16px", marginTop: "24px", justifyContent: "center" }}>
-            <Link href="/" className="btn-primary" style={{ textDecoration: "none" }}>
-              <i className="fas fa-home"></i> Return Home
-            </Link>
-            <a href="mailto:support@testflighttesters.com" className="btn-outline" style={{ textDecoration: "none" }}>
-              <i className="fas fa-envelope"></i> Contact Support
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="payment-container">
       <div className="payment-card">
@@ -188,6 +204,41 @@ export default function PaymentPage() {
 
         <h1 className="payment-title">Complete Your Order</h1>
         <p className="payment-subtitle">Review your testing package and proceed to secure payment.</p>
+
+        {/* Customer Details Form */}
+        <div className="customer-details">
+          <h3>Contact Information</h3>
+          <div className="form-group">
+            <label>Email Address *</label>
+            <input
+              type="email"
+              placeholder="your@email.com"
+              value={customerDetails.email}
+              onChange={(e) => setCustomerDetails({...customerDetails, email: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Full Name *</label>
+            <input
+              type="text"
+              placeholder="John Doe"
+              value={customerDetails.name}
+              onChange={(e) => setCustomerDetails({...customerDetails, name: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Phone Number (WhatsApp)</label>
+            <input
+              type="tel"
+              placeholder="+27 78 123 4567"
+              value={customerDetails.phone}
+              onChange={(e) => setCustomerDetails({...customerDetails, phone: e.target.value})}
+            />
+            <small>We'll use this for WhatsApp updates</small>
+          </div>
+        </div>
 
         <div className="order-summary">
           <div className="order-row">
@@ -235,10 +286,6 @@ export default function PaymentPage() {
                 <div style={{ fontWeight: 600 }}>PayPal</div>
                 <div style={{ fontSize: "0.85rem", color: "var(--gray)" }}>
                   Secure payment with PayPal. Accepts credit cards, debit cards, and PayPal balance.
-                  <br />
-                  <span style={{ fontSize: "0.75rem", color: "var(--mint)" }}>
-                    <i className="fas fa-check"></i> International payments accepted
-                  </span>
                 </div>
               </div>
             </div>
@@ -248,32 +295,22 @@ export default function PaymentPage() {
           </div>
         </div>
 
-        {paymentStatus === "idle" && (
-          <div className="paypal-container">
-            <PayPalScriptProvider
-              options={{
-                clientId: PAYPAL_CLIENT_ID,
-                currency: "USD",
-                intent: "capture",
-                // For South Africa, you may need to enable these
-                // components: "buttons",
-                // "enable-funding": "paylater",
-              }}
-            >
-              <PayPalButtonWrapper
-                amount={orderData.total}
-                onSuccess={handlePaymentSuccess}
-                onError={handlePaymentError}
-              />
-            </PayPalScriptProvider>
-          </div>
-        )}
-
-        {paymentStatus === "error" && (
-          <button className="btn-primary" onClick={handleRetry} style={{ width: "100%", justifyContent: "center" }}>
-            <i className="fas fa-redo"></i> Try Again
-          </button>
-        )}
+        <div className="paypal-container">
+          <PayPalScriptProvider
+            options={{
+              clientId: PAYPAL_CLIENT_ID,
+              currency: "USD",
+              intent: "capture",
+            }}
+          >
+            <PayPalButtonWrapper
+              amount={orderData.total}
+              onSuccess={handlePaymentSuccess}
+              onError={handlePaymentError}
+              orderData={orderData}
+            />
+          </PayPalScriptProvider>
+        </div>
 
         <div className="payment-actions" style={{ marginTop: "16px" }}>
           <Link href="/" className="btn-outline" style={{ textDecoration: "none", flex: 1, justifyContent: "center" }}>
@@ -284,11 +321,6 @@ export default function PaymentPage() {
         <div className="payment-secure">
           <i className="fas fa-lock"></i>
           <span>Your payment is secure and encrypted. PayPal protects your financial information.</span>
-        </div>
-
-        <div className="payment-supported-countries">
-          <i className="fas fa-globe"></i>
-          <span>Accepts payments from South Africa and 200+ countries worldwide</span>
         </div>
       </div>
     </div>
