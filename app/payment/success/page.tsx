@@ -14,6 +14,10 @@ interface OrderData {
   total: number;
   currency: string;
   orderId?: string;
+  customerEmail?: string;
+  customerName?: string;
+  customerPhone?: string;
+  paypalOrderId?: string;
 }
 
 export default function PaymentSuccessPage() {
@@ -26,8 +30,7 @@ export default function PaymentSuccessPage() {
     const stored = sessionStorage.getItem("orderData");
     if (stored) {
       const data = JSON.parse(stored);
-      // Generate a unique order ID
-      const id = `TFT-${Date.now().toString().slice(-6)}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+      const id = data.orderId || `TFT-${Date.now().toString().slice(-6)}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
       setOrderId(id);
       setOrderData(data);
     } else {
@@ -37,7 +40,7 @@ export default function PaymentSuccessPage() {
   }, [router]);
 
   // WhatsApp number - replace with your actual business number
-  const WHATSAPP_NUMBER = "27791234567"; // South African number format: 27XXXXXXXXX
+  const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "27791234567";
 
   // Generate WhatsApp message with order details
   const generateWhatsAppMessage = () => {
@@ -56,11 +59,38 @@ Total: $${orderData.total} USD
 
 📱 My TestFlight Link: [Paste your TestFlight public link here]
 
-📧 My Email: [Your email address]
+📧 My Email: ${orderData.customerEmail || '[Your email address]'}
 
 Please confirm receipt and let me know when testing will begin.
 
 Thank you! 🙌`;
+  };
+
+  // Generate email with order details
+  const generateEmailBody = () => {
+    if (!orderData) return "";
+    return `Hello TestFlightTesters,
+
+I've just placed an order for QA testing and wanted to share my details.
+
+📋 Order Details:
+Order ID: ${orderId}
+Testing Type: ${orderData.typeLabel}
+Testers: ${orderData.testers}
+Hours: ${orderData.hours}h
+Delivery: ${orderData.delivery === "standard" ? "Standard (2-3 days)" : orderData.delivery === "priority" ? "Priority (1-2 days)" : "Express (24h)"}
+Total: $${orderData.total} USD
+
+📱 My TestFlight Link: [Paste your TestFlight public link here]
+
+📧 My Email: ${orderData.customerEmail || '[Your email address]'}
+
+📱 My Phone: ${orderData.customerPhone || '[Your phone number]'}
+
+Please confirm receipt and let me know when testing will begin.
+
+Thank you!
+[Your Name]`;
   };
 
   const handleWhatsAppClick = () => {
@@ -70,7 +100,7 @@ Thank you! 🙌`;
 
   const handleEmailClick = () => {
     const subject = encodeURIComponent(`Order #${orderId} - TestFlight QA Testing`);
-    const body = encodeURIComponent(generateWhatsAppMessage());
+    const body = encodeURIComponent(generateEmailBody());
     window.open(`mailto:support@testflighttesters.com?subject=${subject}&body=${body}`, "_blank");
   };
 
@@ -118,6 +148,11 @@ Thank you! 🙌`;
           <p className="success-subtitle">
             Your TestFlight QA testing order has been confirmed.
           </p>
+          {orderData.paypalOrderId && (
+            <p className="success-subtitle" style={{ fontSize: "0.8rem", color: "var(--gray)", marginTop: "4px" }}>
+              PayPal Order: {orderData.paypalOrderId}
+            </p>
+          )}
         </div>
 
         {/* Order Details */}
@@ -192,24 +227,24 @@ Thank you! 🙌`;
           </div>
         </div>
 
-        {/* Contact Options */}
-        <div className="contact-options">
+        {/* Quick Action Buttons */}
+        <div className="quick-actions">
           <h4>📱 Send us your details</h4>
-          <div className="contact-buttons">
-            <button className="contact-btn whatsapp" onClick={handleWhatsAppClick}>
+          <div className="action-buttons">
+            <button className="action-btn whatsapp-btn" onClick={handleWhatsAppClick}>
               <i className="fab fa-whatsapp"></i>
-              WhatsApp
-              <span className="contact-btn-sub">Quickest response</span>
+              Send via WhatsApp
+              <span className="action-sub">Quickest response</span>
             </button>
-            <button className="contact-btn email" onClick={handleEmailClick}>
+            <button className="action-btn email-btn" onClick={handleEmailClick}>
               <i className="fas fa-envelope"></i>
-              Email
-              <span className="contact-btn-sub">support@testflighttesters.com</span>
+              Send via Email
+              <span className="action-sub">support@testflighttesters.com</span>
             </button>
           </div>
         </div>
 
-        {/* What to send */}
+        {/* What to Send */}
         <div className="what-to-send">
           <h4>✏️ What to send us</h4>
           <div className="send-items">
@@ -225,6 +260,11 @@ Thank you! 🙌`;
               <div>
                 <strong>Email Address</strong>
                 <p>Where we should send reports and updates</p>
+                {orderData.customerEmail && (
+                  <p style={{ fontSize: "0.8rem", color: "var(--primary)" }}>
+                    Using: {orderData.customerEmail}
+                  </p>
+                )}
               </div>
             </div>
             <div className="send-item">
@@ -237,15 +277,9 @@ Thank you! 🙌`;
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Return Home */}
         <div className="success-actions">
-          <button className="btn-primary whatsapp-btn" onClick={handleWhatsAppClick}>
-            <i className="fab fa-whatsapp"></i> Send via WhatsApp
-          </button>
-          <button className="btn-outline email-btn" onClick={handleEmailClick}>
-            <i className="fas fa-envelope"></i> Send via Email
-          </button>
-          <Link href="/" className="btn-outline home-btn">
+          <Link href="/" className="btn-primary home-btn">
             <i className="fas fa-home"></i> Return Home
           </Link>
         </div>
