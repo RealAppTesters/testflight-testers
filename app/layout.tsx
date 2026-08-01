@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Payment · TestFlightTesters",
-  description: "Complete your TestFlight QA testing order with secure PayPal payment.",
+  title: "TestFlightTesters",
+  description: "Professional TestFlight QA Testing",
 };
 
-export default function PaymentLayout({
+export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
-  return <>{children}</>;
+}>) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
 }
