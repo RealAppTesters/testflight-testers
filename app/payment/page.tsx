@@ -19,6 +19,7 @@ interface OrderData {
   customerPhone?: string;
 }
 
+// Use the sandbox client ID from environment
 const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "sb";
 
 function PayPalButtonWrapper({ 
@@ -56,12 +57,6 @@ function PayPalButtonWrapper({
               ],
               application_context: {
                 shipping_preference: "NO_SHIPPING",
-              },
-              payer: {
-                email_address: orderData.customerEmail || undefined,
-                name: {
-                  given_name: orderData.customerName || undefined,
-                },
               },
             });
           }}
@@ -118,42 +113,7 @@ export default function PaymentPage() {
         status: 'confirmed',
       };
       
-      // Store in session for the success page
       sessionStorage.setItem("orderData", JSON.stringify(completeOrderData));
-      
-      // Send to webhook for processing
-      fetch('/api/webhooks/paypal', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          resource: {
-            id: details.id,
-            payer: {
-              email_address: customerDetails.email || details.payer?.email_address,
-              name: {
-                given_name: customerDetails.name || details.payer?.name?.given_name,
-              },
-              phone: {
-                phone_number: {
-                  national_number: customerDetails.phone || '',
-                }
-              }
-            },
-            purchase_units: [
-              {
-                amount: {
-                  value: orderData.total.toFixed(2),
-                  currency_code: 'USD',
-                },
-                description: `${orderData.typeLabel} - ${orderData.testers} testers`,
-              }
-            ]
-          },
-          event_type: 'PAYMENT.CAPTURE.COMPLETED'
-        }),
-      });
     }
     
     // Redirect to success page
@@ -278,14 +238,17 @@ export default function PaymentPage() {
         )}
 
         <div className="payment-methods">
-          <h3>Pay with PayPal</h3>
+          <h3>Pay with PayPal (Sandbox)</h3>
           <div className="payment-option selected">
             <div className="payment-option-content">
               <i className="fab fa-paypal" style={{ fontSize: "1.8rem", color: "#003087" }}></i>
               <div>
-                <div style={{ fontWeight: 600 }}>PayPal</div>
+                <div style={{ fontWeight: 600 }}>PayPal Sandbox</div>
                 <div style={{ fontSize: "0.85rem", color: "var(--gray)" }}>
-                  Secure payment with PayPal. Accepts credit cards, debit cards, and PayPal balance.
+                  Testing mode - use a sandbox test account to pay
+                </div>
+                <div style={{ fontSize: "0.75rem", color: "var(--primary)", marginTop: "4px" }}>
+                  <i className="fas fa-info-circle"></i> Use sandbox test credentials
                 </div>
               </div>
             </div>
@@ -301,6 +264,8 @@ export default function PaymentPage() {
               clientId: PAYPAL_CLIENT_ID,
               currency: "USD",
               intent: "capture",
+              // For sandbox testing
+              "enable-funding": "paylater",
             }}
           >
             <PayPalButtonWrapper
@@ -320,7 +285,7 @@ export default function PaymentPage() {
 
         <div className="payment-secure">
           <i className="fas fa-lock"></i>
-          <span>Your payment is secure and encrypted. PayPal protects your financial information.</span>
+          <span>Sandbox mode - No real money is being charged</span>
         </div>
       </div>
     </div>
