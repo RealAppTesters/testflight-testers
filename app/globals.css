@@ -2354,3 +2354,115 @@ body {
   border-color: var(--primary);
   transform: translateY(-3px);
 }
+
+/* ─── PDF Report Styles ─── */
+.pdf-report-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.download-pdf-btn {
+  margin-bottom: 40px;
+  padding: 16px 40px;
+  font-size: 1.1rem;
+  width: 100%;
+  justify-content: center;
+  background: #6c3ce0;
+}
+
+.download-pdf-btn:hover {
+  background: #5a2fc4;
+}
+
+.download-pdf-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.report-preview {
+  background: white;
+  border-radius: 28px;
+  border: 1px solid #e8e6e1;
+  box-shadow: 0 20px 60px rgba(108, 60, 224, 0.08);
+  overflow: hidden;
+}
+
+.report-preview-header {
+  padding: 32px 40px;
+  border-bottom: 2px solid #e8e6e1;
+  background: #faf9f6;
+}
+
+.report-preview-header h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.report-preview-sub {
+  color: #6b6b7b;
+  font-size: 0.95rem;
+}
+
+.report-preview-content {
+  padding: 40px;
+  background: white;
+  max-height: 800px;
+  overflow-y: auto;
+}
+
+/* ─── Report Content Styles ─── */
+.report-content * {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.report-preview-content .fa-solid,
+.report-preview-content .fa-regular,
+.report-preview-content .fa-brands {
+  font-family: 'Font Awesome 6 Free' !important;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .report-preview-content {
+    padding: 20px;
+  }
+
+  .report-preview-header {
+    padding: 20px 24px;
+  }
+
+  .report-preview-content > div {
+    padding: 20px !important;
+  }
+
+  .report-preview-content [style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  .report-preview-content [style*="grid-template-columns: 1fr 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .download-pdf-btn {
+    font-size: 0.95rem;
+    padding: 14px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .report-preview-content [style*="grid-template-columns: 1fr 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  .report-preview-content h1 {
+    font-size: 1.8rem !important;
+  }
+
+  .report-preview-content [style*="display: flex; justify-content: center; gap: 40px"] {
+    gap: 16px !important;
+    flex-direction: column;
+    align-items: center;
+  }
+}
