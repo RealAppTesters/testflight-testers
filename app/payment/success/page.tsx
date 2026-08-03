@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import PDFReportGenerator from "@/components/PDFReportGenerator";
 
 interface OrderData {
   type: string;
@@ -41,7 +40,7 @@ export default function PaymentSuccessPage() {
   }, [router]);
 
   // WhatsApp number - replace with your actual business number
-  const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "27791234567";
+  const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "27606393302";
 
   // Generate WhatsApp message with detailed order details and testing priorities
   const generateWhatsAppMessage = () => {
@@ -350,18 +349,6 @@ ${orderData.customerName || 'Your Name'}`;
               </div>
             </div>
           </div>
-        </div>
-
-        {/* PDF Report Section */}
-        <div className="pdf-section" style={{ marginBottom: "32px" }}>
-          <h4 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: "12px" }}>
-            📄 Download Your QA Report Sample
-          </h4>
-          <p style={{ color: "var(--gray)", fontSize: "0.95rem", marginBottom: "16px" }}>
-            See what your comprehensive QA report will look like. This sample shows 
-            the detailed analysis you'll receive after testing.
-          </p>
-          <PDFReportGenerator />
         </div>
 
         {/* Return Home */}
