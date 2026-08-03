@@ -46,7 +46,7 @@ export default function PDFReportGenerator() {
     networkRequests: 47,
   };
 
-  const deviceData = [
+  const deviceScores = [
     { device: "iPhone 14", score: 7 },
     { device: "iPhone 15 Pro Max", score: 8 },
     { device: "iPhone 13", score: 5 },
@@ -54,24 +54,42 @@ export default function PDFReportGenerator() {
     { device: "iPad Pro 12.9", score: 7 },
   ];
 
+  const totalBugs = bugData.critical + bugData.high + bugData.medium + bugData.low;
+
   const generatePDF = async () => {
     setIsGenerating(true);
     
     try {
-      const element = document.getElementById('report-content');
-      if (!element) return;
+      // Create a temporary container for the PDF content
+      const container = document.createElement('div');
+      container.style.position = 'fixed';
+      container.style.left = '-9999px';
+      container.style.top = '0';
+      container.style.width = '1200px';
+      container.style.padding = '40px';
+      container.style.background = '#ffffff';
+      container.style.fontFamily = 'Inter, -apple-system, sans-serif';
+      container.style.color = '#1a1a2e';
+      container.style.lineHeight = '1.6';
+      container.style.zIndex = '9999';
+      
+      container.innerHTML = getReportHTML(sampleData, bugData, performanceData, deviceScores, totalBugs);
+      document.body.appendChild(container);
 
       // Wait for fonts and images to load
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      const canvas = await html2canvas(element, {
+      const canvas = await html2canvas(container, {
         scale: 2,
         useCORS: true,
         logging: false,
         backgroundColor: '#ffffff',
         width: 1200,
-        height: element.scrollHeight,
+        height: container.scrollHeight,
       });
+
+      // Remove temporary container
+      document.body.removeChild(container);
 
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
@@ -81,11 +99,16 @@ export default function PDFReportGenerator() {
       // Add image to PDF
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
 
-      // Add watermark or footer if needed
-      const pageCount = Math.ceil(pdfHeight / 297);
-      for (let i = 1; i < pageCount; i++) {
+      // Handle multiple pages if needed
+      const pageHeight = 297;
+      let remainingHeight = pdfHeight;
+      let currentPage = 0;
+      
+      while (remainingHeight > pageHeight) {
+        currentPage++;
         pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, -i * 297, pdfWidth, pdfHeight);
+        pdf.addImage(imgData, 'PNG', 0, -currentPage * pageHeight, pdfWidth, pdfHeight);
+        remainingHeight -= pageHeight;
       }
 
       pdf.save(`QA-Report-${sampleData.orderId}.pdf`);
@@ -103,6 +126,14 @@ export default function PDFReportGenerator() {
         className="btn-primary download-pdf-btn"
         onClick={generatePDF}
         disabled={isGenerating}
+        style={{
+          width: '100%',
+          justifyContent: 'center',
+          padding: '16px 40px',
+          fontSize: '1.1rem',
+          background: isGenerating ? '#8b6cf5' : '#6c3ce0',
+          cursor: isGenerating ? 'not-allowed' : 'pointer',
+        }}
       >
         {isGenerating ? (
           <>
@@ -114,45 +145,13 @@ export default function PDFReportGenerator() {
           </>
         )}
       </button>
-
-      {/* Hidden report content for PDF generation */}
-      <div id="report-content" className="report-content" style={{ 
-        display: 'block', 
-        position: 'absolute', 
-        left: '-9999px', 
-        top: '-9999px',
-        width: '1200px',
-        padding: '40px',
-        background: '#ffffff',
-        fontFamily: 'Inter, sans-serif',
-        color: '#1a1a2e',
-        lineHeight: '1.6',
-        visibility: 'hidden',
-        pointerEvents: 'none',
-      }}>
-        {/* Report content - same as visible preview */}
-        <div dangerouslySetInnerHTML={{ __html: getReportHTML(sampleData, bugData, performanceData, deviceData) }} />
-      </div>
-
-      {/* Visible Preview */}
-      <div className="report-preview">
-        <div className="report-preview-header">
-          <h2>📋 Report Preview</h2>
-          <p className="report-preview-sub">This is how your QA report will look</p>
-        </div>
-        <div className="report-preview-content" dangerouslySetInnerHTML={{ 
-          __html: getReportHTML(sampleData, bugData, performanceData, deviceData) 
-        }} />
-      </div>
     </div>
   );
 }
 
-function getReportHTML(data: ReportData, bugs: any, performance: any, devices: any[]): string {
-  const totalBugs = bugs.critical + bugs.high + bugs.medium + bugs.low;
-  
+function getReportHTML(data: ReportData, bugs: any, performance: any, deviceScores: any[], totalBugs: number): string {
   return `
-    <div style="max-width: 1100px; margin: 0 auto; padding: 40px; background: white; border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.08);">
+    <div style="max-width: 1100px; margin: 0 auto; background: white; border-radius: 24px;">
       <!-- Header -->
       <div style="text-align: center; margin-bottom: 40px; padding-bottom: 30px; border-bottom: 2px solid #e8e6e1;">
         <div style="font-size: 2rem; font-weight: 800; color: #0d0c1d; margin-bottom: 4px;">
@@ -205,7 +204,7 @@ function getReportHTML(data: ReportData, bugs: any, performance: any, devices: a
         <!-- Device Scores -->
         <div style="background: #f8fafc; padding: 24px; border-radius: 16px; border: 1px solid #e8e6e1;">
           <h3 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 16px;">Device Testing Scores</h3>
-          ${devices.map(d => `
+          ${deviceScores.map(d => `
             <div style="margin-bottom: 12px;">
               <div style="display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 2px;">
                 <span>${d.device}</span>
@@ -242,7 +241,7 @@ function getReportHTML(data: ReportData, bugs: any, performance: any, devices: a
       <!-- Critical Issues -->
       <div style="margin-bottom: 40px;">
         <h2 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 16px; color: #ff6b4a;">
-          <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i> Critical Issues
+          Critical Issues
         </h2>
         <div style="background: #fff5f3; padding: 20px; border-radius: 16px; border-left: 4px solid #ff6b4a;">
           <div style="margin-bottom: 12px;">
@@ -266,7 +265,7 @@ function getReportHTML(data: ReportData, bugs: any, performance: any, devices: a
         <div style="display: flex; flex-wrap: wrap; gap: 12px;">
           ${data.devices.map(device => `
             <span style="background: #f8fafc; padding: 8px 20px; border-radius: 40px; border: 1px solid #e8e6e1; font-size: 0.95rem;">
-              <i class="fas fa-mobile-alt" style="color: #6c3ce0; margin-right: 8px;"></i> ${device}
+              ${device}
             </span>
           `).join('')}
         </div>
@@ -289,7 +288,7 @@ function getReportHTML(data: ReportData, bugs: any, performance: any, devices: a
         </p>
       </div>
 
-      <!-- Contact -->
+      <!-- Footer -->
       <div style="text-align: center; padding-top: 24px; border-top: 2px solid #e8e6e1; color: #6b6b7b; font-size: 0.9rem;">
         <p style="margin-bottom: 8px;">
           <strong style="color: #1a1a2e;">Need help?</strong> Contact us:
