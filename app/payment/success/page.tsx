@@ -351,6 +351,21 @@ ${orderData.customerName || 'Your Name'}`;
           </div>
         </div>
 
+        // Add near the bottom of the page, before the Return Home button
+       import PDFReportGenerator from "@/components/PDFReportGenerator";
+
+// Inside the return statement, after the "What to Send" section:
+<div className="pdf-section" style={{ marginBottom: "32px" }}>
+  <h4 style={{ fontSize: "1rem", fontWeight: 700, marginBottom: "12px" }}>
+    📄 Download Your QA Report Sample
+  </h4>
+  <p style={{ color: "var(--gray)", fontSize: "0.95rem", marginBottom: "16px" }}>
+    See what your comprehensive QA report will look like. This sample shows 
+    the detailed analysis you'll receive after testing.
+  </p>
+  <PDFReportGenerator />
+</div>
+
         {/* Return Home */}
         <div className="success-actions">
           <Link href="/" className="btn-primary home-btn">
