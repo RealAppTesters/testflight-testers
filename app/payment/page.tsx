@@ -1,13 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  PayPalScriptProvider,
-  PayPalButtons,
-  usePayPalScriptReducer,
-} from "@paypal/react-paypal-js";
 
 interface OrderData {
   type: string;
@@ -23,74 +18,27 @@ interface OrderData {
   customerPhone?: string;
 }
 
-// Use the sandbox client ID from environment
-const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "sb";
-
-function PayPalButtonWrapper({
-  amount,
-  onSuccess,
-  onError,
-  orderData,
-}: {
-  amount: number;
-  onSuccess: (details: any) => void;
-  onError: (error: any) => void;
-  orderData: OrderData;
-}) {
-  const [{ isPending }] = usePayPalScriptReducer();
-
-  return (
-    <>
-      {isPending ? (
-        <div className="paypal-loading">
-          <i className="fas fa-spinner fa-spin"></i> Loading PayPal...
-        </div>
-      ) : (
-        <PayPalButtons
-          style={{ layout: "vertical", color: "blue", shape: "rect", label: "pay" }}
-          createOrder={(data, actions) => {
-            return actions.order.create({
-              purchase_units: [
-                {
-                  amount: {
-                    value: amount.toFixed(2),
-                    currency_code: "USD",
-                  },
-                  description: `${orderData.typeLabel} - ${orderData.testers} testers × ${orderData.hours}h`,
-                },
-              ],
-              application_context: {
-                shipping_preference: "NO_SHIPPING",
-              },
-            });
-          }}
-          onApprove={(data, actions) => {
-            return actions.order!.capture().then((details) => {
-              onSuccess(details);
-            });
-          }}
-          onError={(error) => {
-            onError(error);
-          }}
-        />
-      )}
-    </>
-  );
+declare global {
+  interface Window {
+    paypal: any;
+  }
 }
 
 export default function PaymentPage() {
   const router = useRouter();
   const [orderData, setOrderData] = useState<OrderData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [paymentStatus, setPaymentStatus] = useState<
-    "idle" | "processing" | "success" | "error"
-  >("idle");
+  const [paymentStatus, setPaymentStatus] = useState<"idle" | "processing" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [customerDetails, setCustomerDetails] = useState({
     email: "",
     name: "",
     phone: "",
   });
+  const [paypalLoaded, setPaypalLoaded] = useState(false);
+  const paypalContainerRef = useRef<HTMLDivElement>(null);
+
+  const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "sb";
 
   useEffect(() => {
     const stored = sessionStorage.getItem("orderData");
@@ -102,6 +50,78 @@ export default function PaymentPage() {
     }
     setLoading(false);
   }, [router]);
+
+  // Load PayPal SDK from CDN
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    // Check if PayPal is already loaded
+    if (window.paypal) {
+      setPaypalLoaded(true);
+      return;
+    }
+
+    // Load PayPal SDK script
+    const script = document.createElement("script");
+    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD`;
+    script.async = true;
+    script.onload = () => {
+      setPaypalLoaded(true);
+    };
+    script.onerror = () => {
+      setErrorMessage("Failed to load PayPal. Please refresh the page.");
+    };
+    document.body.appendChild(script);
+
+    return () => {
+      // Cleanup
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, [PAYPAL_CLIENT_ID]);
+
+  // Render PayPal buttons when loaded
+  useEffect(() => {
+    if (!paypalLoaded || !orderData || !paypalContainerRef.current) return;
+
+    // Clear container
+    paypalContainerRef.current.innerHTML = "";
+
+    // Render PayPal buttons
+    window.paypal.Buttons({
+      style: {
+        layout: "vertical",
+        color: "blue",
+        shape: "rect",
+        label: "pay",
+      },
+      createOrder: (data: any, actions: any) => {
+        return actions.order.create({
+          purchase_units: [
+            {
+              amount: {
+                value: orderData.total.toFixed(2),
+                currency_code: "USD",
+              },
+              description: `${orderData.typeLabel} - ${orderData.testers} testers × ${orderData.hours}h`,
+            },
+          ],
+          application_context: {
+            shipping_preference: "NO_SHIPPING",
+          },
+        });
+      },
+      onApprove: (data: any, actions: any) => {
+        return actions.order.capture().then((details: any) => {
+          handlePaymentSuccess(details);
+        });
+      },
+      onError: (error: any) => {
+        handlePaymentError(error);
+      },
+    }).render(paypalContainerRef.current);
+  }, [paypalLoaded, orderData]);
 
   const handlePaymentSuccess = (details: any) => {
     setPaymentStatus("success");
@@ -277,7 +297,7 @@ export default function PaymentPage() {
         )}
 
         <div className="payment-methods">
-          <h3>Pay with PayPal (Sandbox)</h3>
+          <h3>Pay with PayPal</h3>
           <div className="payment-option selected">
             <div className="payment-option-content">
               <i
@@ -285,19 +305,15 @@ export default function PaymentPage() {
                 style={{ fontSize: "1.8rem", color: "#003087" }}
               ></i>
               <div>
-                <div style={{ fontWeight: 600 }}>PayPal Sandbox</div>
+                <div style={{ fontWeight: 600 }}>PayPal</div>
                 <div style={{ fontSize: "0.85rem", color: "var(--gray)" }}>
-                  Testing mode - use a sandbox test account to pay
+                  Secure payment with PayPal. Accepts credit cards, debit cards, and PayPal balance.
                 </div>
-                <div
-                  style={{
-                    fontSize: "0.75rem",
-                    color: "var(--primary)",
-                    marginTop: "4px",
-                  }}
-                >
-                  <i className="fas fa-info-circle"></i> Use sandbox test credentials
-                </div>
+                {!paypalLoaded && (
+                  <div style={{ fontSize: "0.75rem", color: "var(--primary)", marginTop: "4px" }}>
+                    <i className="fas fa-spinner fa-spin"></i> Loading PayPal...
+                  </div>
+                )}
               </div>
             </div>
             <div className="payment-option-check">
@@ -306,22 +322,16 @@ export default function PaymentPage() {
           </div>
         </div>
 
-        <div className="paypal-container">
-          <PayPalScriptProvider
-            options={{
-              clientId: PAYPAL_CLIENT_ID,
-              currency: "USD",
-              intent: "capture",
-              "enable-funding": "paylater",
-            }}
-          >
-            <PayPalButtonWrapper
-              amount={orderData.total}
-              onSuccess={handlePaymentSuccess}
-              onError={handlePaymentError}
-              orderData={orderData}
-            />
-          </PayPalScriptProvider>
+        <div 
+          ref={paypalContainerRef}
+          className="paypal-container"
+          style={{ minHeight: "100px" }}
+        >
+          {!paypalLoaded && (
+            <div className="paypal-loading">
+              <i className="fas fa-spinner fa-spin"></i> Loading PayPal...
+            </div>
+          )}
         </div>
 
         <div className="payment-actions" style={{ marginTop: "16px" }}>
@@ -340,7 +350,7 @@ export default function PaymentPage() {
 
         <div className="payment-secure">
           <i className="fas fa-lock"></i>
-          <span>Sandbox mode - No real money is being charged</span>
+          <span>Your payment is secure and encrypted.</span>
         </div>
       </div>
     </div>
