@@ -3,7 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { PayPalScriptProvider, PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import {
+  PayPalScriptProvider,
+  PayPalButtons,
+  usePayPalScriptReducer,
+} from "@paypal/react-paypal-js";
 
 interface OrderData {
   type: string;
@@ -22,13 +26,13 @@ interface OrderData {
 // Use the sandbox client ID from environment
 const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "sb";
 
-function PayPalButtonWrapper({ 
-  amount, 
-  onSuccess, 
+function PayPalButtonWrapper({
+  amount,
+  onSuccess,
   onError,
-  orderData 
-}: { 
-  amount: number; 
+  orderData,
+}: {
+  amount: number;
   onSuccess: (details: any) => void;
   onError: (error: any) => void;
   orderData: OrderData;
@@ -78,12 +82,14 @@ export default function PaymentPage() {
   const router = useRouter();
   const [orderData, setOrderData] = useState<OrderData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [paymentStatus, setPaymentStatus] = useState<"idle" | "processing" | "success" | "error">("idle");
+  const [paymentStatus, setPaymentStatus] = useState<
+    "idle" | "processing" | "success" | "error"
+  >("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [customerDetails, setCustomerDetails] = useState({
-    email: '',
-    name: '',
-    phone: '',
+    email: "",
+    name: "",
+    phone: "",
   });
 
   useEffect(() => {
@@ -99,39 +105,52 @@ export default function PaymentPage() {
 
   const handlePaymentSuccess = (details: any) => {
     setPaymentStatus("success");
-    
+
     // Store order with customer details and generated ID
     if (orderData) {
-      const orderId = `TFT-${Date.now().toString().slice(-6)}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+      const orderId = `TFT-${Date.now().toString().slice(-6)}-${Math.random()
+        .toString(36)
+        .substring(2, 6)
+        .toUpperCase()}`;
       const completeOrderData = {
         ...orderData,
         orderId: orderId,
-        customerEmail: customerDetails.email || details.payer?.email_address || '',
-        customerName: customerDetails.name || details.payer?.name?.given_name || '',
-        customerPhone: customerDetails.phone || '',
+        customerEmail: customerDetails.email || details.payer?.email_address || "",
+        customerName: customerDetails.name || details.payer?.name?.given_name || "",
+        customerPhone: customerDetails.phone || "",
         paypalOrderId: details.id,
-        status: 'confirmed',
+        status: "confirmed",
       };
-      
+
       sessionStorage.setItem("orderData", JSON.stringify(completeOrderData));
     }
-    
+
     // Redirect to success page
     router.push("/payment/success");
   };
 
   const handlePaymentError = (error: any) => {
     setPaymentStatus("error");
-    setErrorMessage(error.message || "There was an error processing your payment. Please try again.");
+    setErrorMessage(
+      error.message || "There was an error processing your payment. Please try again."
+    );
     console.error("Payment error:", error);
   };
 
   if (loading) {
     return (
       <div className="payment-container">
-        <div className="payment-card" style={{ textAlign: "center", padding: "60px 40px" }}>
-          <i className="fas fa-spinner fa-spin" style={{ fontSize: "2rem", color: "var(--primary)" }}></i>
-          <p style={{ marginTop: "20px", color: "var(--gray)" }}>Loading your order...</p>
+        <div
+          className="payment-card"
+          style={{ textAlign: "center", padding: "60px 40px" }}
+        >
+          <i
+            className="fas fa-spinner fa-spin"
+            style={{ fontSize: "2rem", color: "var(--primary)" }}
+          ></i>
+          <p style={{ marginTop: "20px", color: "var(--gray)" }}>
+            Loading your order...
+          </p>
         </div>
       </div>
     );
@@ -140,11 +159,23 @@ export default function PaymentPage() {
   if (!orderData) {
     return (
       <div className="payment-container">
-        <div className="payment-card" style={{ textAlign: "center", padding: "60px 40px" }}>
-          <i className="fas fa-exclamation-circle" style={{ fontSize: "2rem", color: "var(--coral)" }}></i>
+        <div
+          className="payment-card"
+          style={{ textAlign: "center", padding: "60px 40px" }}
+        >
+          <i
+            className="fas fa-exclamation-circle"
+            style={{ fontSize: "2rem", color: "var(--coral)" }}
+          ></i>
           <h2 style={{ marginTop: "20px" }}>No order found</h2>
-          <p style={{ color: "var(--gray)" }}>Please return to the homepage and select your testing package.</p>
-          <Link href="/" className="btn-primary" style={{ marginTop: "20px", display: "inline-block" }}>
+          <p style={{ color: "var(--gray)" }}>
+            Please return to the homepage and select your testing package.
+          </p>
+          <Link
+            href="/"
+            className="btn-primary"
+            style={{ marginTop: "20px", display: "inline-block" }}
+          >
             <i className="fas fa-arrow-left"></i> Back to Home
           </Link>
         </div>
@@ -163,7 +194,9 @@ export default function PaymentPage() {
         </div>
 
         <h1 className="payment-title">Complete Your Order</h1>
-        <p className="payment-subtitle">Review your testing package and proceed to secure payment.</p>
+        <p className="payment-subtitle">
+          Review your testing package and proceed to secure payment.
+        </p>
 
         {/* Customer Details Form */}
         <div className="customer-details">
@@ -174,7 +207,9 @@ export default function PaymentPage() {
               type="email"
               placeholder="your@email.com"
               value={customerDetails.email}
-              onChange={(e) => setCustomerDetails({...customerDetails, email: e.target.value})}
+              onChange={(e) =>
+                setCustomerDetails({ ...customerDetails, email: e.target.value })
+              }
               required
             />
           </div>
@@ -184,7 +219,9 @@ export default function PaymentPage() {
               type="text"
               placeholder="John Doe"
               value={customerDetails.name}
-              onChange={(e) => setCustomerDetails({...customerDetails, name: e.target.value})}
+              onChange={(e) =>
+                setCustomerDetails({ ...customerDetails, name: e.target.value })
+              }
               required
             />
           </div>
@@ -194,7 +231,9 @@ export default function PaymentPage() {
               type="tel"
               placeholder="+27 78 123 4567"
               value={customerDetails.phone}
-              onChange={(e) => setCustomerDetails({...customerDetails, phone: e.target.value})}
+              onChange={(e) =>
+                setCustomerDetails({ ...customerDetails, phone: e.target.value })
+              }
             />
             <small>We'll use this for WhatsApp updates</small>
           </div>
@@ -241,13 +280,22 @@ export default function PaymentPage() {
           <h3>Pay with PayPal (Sandbox)</h3>
           <div className="payment-option selected">
             <div className="payment-option-content">
-              <i className="fab fa-paypal" style={{ fontSize: "1.8rem", color: "#003087" }}></i>
+              <i
+                className="fab fa-paypal"
+                style={{ fontSize: "1.8rem", color: "#003087" }}
+              ></i>
               <div>
                 <div style={{ fontWeight: 600 }}>PayPal Sandbox</div>
                 <div style={{ fontSize: "0.85rem", color: "var(--gray)" }}>
                   Testing mode - use a sandbox test account to pay
                 </div>
-                <div style={{ fontSize: "0.75rem", color: "var(--primary)", marginTop: "4px" }}>
+                <div
+                  style={{
+                    fontSize: "0.75rem",
+                    color: "var(--primary)",
+                    marginTop: "4px",
+                  }}
+                >
                   <i className="fas fa-info-circle"></i> Use sandbox test credentials
                 </div>
               </div>
@@ -264,7 +312,6 @@ export default function PaymentPage() {
               clientId: PAYPAL_CLIENT_ID,
               currency: "USD",
               intent: "capture",
-              // For sandbox testing
               "enable-funding": "paylater",
             }}
           >
@@ -278,7 +325,15 @@ export default function PaymentPage() {
         </div>
 
         <div className="payment-actions" style={{ marginTop: "16px" }}>
-          <Link href="/" className="btn-outline" style={{ textDecoration: "none", flex: 1, justifyContent: "center" }}>
+          <Link
+            href="/"
+            className="btn-outline"
+            style={{
+              textDecoration: "none",
+              flex: 1,
+              justifyContent: "center",
+            }}
+          >
             <i className="fas fa-arrow-left"></i> Cancel
           </Link>
         </div>
