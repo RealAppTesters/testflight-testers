@@ -42,12 +42,12 @@ export default function PaymentSuccessPage() {
   // WhatsApp number - replace with your actual business number
   const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "27791234567";
 
-  // Generate WhatsApp message with order details
+  // Generate WhatsApp message with detailed order details and testing priorities
   const generateWhatsAppMessage = () => {
     if (!orderData) return "";
     return `Hello TestFlightTesters! 🚀
 
-I've just placed an order for QA testing.
+I've just placed an order for QA testing and want to share my details.
 
 📋 Order Details:
 Order ID: ${orderId}
@@ -57,16 +57,34 @@ Hours: ${orderData.hours}h
 Delivery: ${orderData.delivery === "standard" ? "Standard (2-3 days)" : orderData.delivery === "priority" ? "Priority (1-2 days)" : "Express (24h)"}
 Total: $${orderData.total} USD
 
-📱 My TestFlight Link: [Paste your TestFlight public link here]
+📱 TestFlight Public Link:
+[Paste your public TestFlight invitation link here]
 
-📧 My Email: ${orderData.customerEmail || '[Your email address]'}
+📧 Contact Email:
+[Email where you'd like to receive QA reports]
+
+🎯 Features to Focus On:
+- [ ] Login & Sign Up
+- [ ] Subscription / In-App Purchases
+- [ ] Navigation
+- [ ] Performance & Speed
+- [ ] Crash Testing
+- [ ] UI / UX
+- [ ] Notifications
+- [ ] Offline Mode
+- [ ] Payments
+- [ ] Account Creation
+- [ ] Other: [Specify]
+
+📝 Extra Notes:
+[Any additional instructions or specific features to test]
 
 Please confirm receipt and let me know when testing will begin.
 
 Thank you! 🙌`;
   };
 
-  // Generate email with order details
+  // Generate email with detailed order details
   const generateEmailBody = () => {
     if (!orderData) return "";
     return `Hello TestFlightTesters,
@@ -81,16 +99,30 @@ Hours: ${orderData.hours}h
 Delivery: ${orderData.delivery === "standard" ? "Standard (2-3 days)" : orderData.delivery === "priority" ? "Priority (1-2 days)" : "Express (24h)"}
 Total: $${orderData.total} USD
 
-📱 My TestFlight Link: [Paste your TestFlight public link here]
+📱 TestFlight Public Link:
+[Paste your public TestFlight invitation link here]
 
-📧 My Email: ${orderData.customerEmail || '[Your email address]'}
+📧 Contact Email:
+[Email where you'd like to receive QA reports]
 
-📱 My Phone: ${orderData.customerPhone || '[Your phone number]'}
+🎯 Features to Focus On:
+- Login & Sign Up
+- Subscription / In-App Purchases
+- Navigation
+- Performance & Speed
+- Crash Testing
+- UI / UX
+- Notifications
+- Offline Mode
+- Payments
+- Account Creation
+- Any specific feature you want thoroughly tested: [Specify]
 
-Please confirm receipt and let me know when testing will begin.
+📝 Extra Notes:
+[Any additional instructions or specific features to test]
 
 Thank you!
-[Your Name]`;
+${orderData.customerName || 'Your Name'}`;
   };
 
   const handleWhatsAppClick = () => {
@@ -99,7 +131,7 @@ Thank you!
   };
 
   const handleEmailClick = () => {
-    const subject = encodeURIComponent(`Order #${orderId} - TestFlight QA Testing`);
+    const subject = encodeURIComponent(`Order #${orderId} - TestFlight QA Testing Details`);
     const body = encodeURIComponent(generateEmailBody());
     window.open(`mailto:support@testflighttesters.com?subject=${subject}&body=${body}`, "_blank");
   };
@@ -107,7 +139,7 @@ Thank you!
   // Copy order ID to clipboard
   const copyOrderId = () => {
     navigator.clipboard.writeText(orderId);
-    alert("Order ID copied to clipboard!");
+    alert("✅ Order ID copied to clipboard!");
   };
 
   if (loading) {
@@ -197,49 +229,77 @@ Thank you!
           </div>
         </div>
 
-        {/* Next Steps */}
+        {/* Next Steps with Testing Priorities */}
         <div className="next-steps">
           <h3>📋 Next Steps</h3>
-          <p>Please send us your TestFlight link and email address so we can start testing:</p>
+          <p>Please send us the following so we can begin testing:</p>
           
           <div className="steps-list">
             <div className="step-item">
               <span className="step-number">1</span>
               <div>
-                <strong>Share your TestFlight link</strong>
-                <p>Send us the public link to your TestFlight build</p>
+                <strong>🔗 TestFlight Public Link</strong>
+                <p>Send your public TestFlight invitation link</p>
               </div>
             </div>
             <div className="step-item">
               <span className="step-number">2</span>
               <div>
-                <strong>Provide your email</strong>
-                <p>We'll send you updates and reports via email</p>
+                <strong>📧 Contact Email</strong>
+                <p>We'll use this to send QA reports and updates</p>
               </div>
             </div>
             <div className="step-item">
               <span className="step-number">3</span>
               <div>
-                <strong>We'll start testing</strong>
-                <p>Testing begins within 24 hours of receiving your link</p>
+                <strong>🎯 Features to Focus On</strong>
+                <p>Tell us what you'd like us to prioritize</p>
+                <div className="priority-tags">
+                  <span className="priority-tag">Login & Sign Up</span>
+                  <span className="priority-tag">Subscriptions / IAP</span>
+                  <span className="priority-tag">Navigation</span>
+                  <span className="priority-tag">Performance & Speed</span>
+                  <span className="priority-tag">Crash Testing</span>
+                  <span className="priority-tag">UI / UX</span>
+                  <span className="priority-tag">Notifications</span>
+                  <span className="priority-tag">Offline Mode</span>
+                  <span className="priority-tag">Payments</span>
+                  <span className="priority-tag">Account Creation</span>
+                  <span className="priority-tag">Multiplayer / Gameplay</span>
+                  <span className="priority-tag highlight">Custom Feature</span>
+                </div>
+                <p style={{ fontSize: "0.8rem", color: "var(--gray)", marginTop: "8px" }}>
+                  Select from the tags above or specify your own
+                </p>
+              </div>
+            </div>
+            <div className="step-item">
+              <span className="step-number">4</span>
+              <div>
+                <strong>🚀 We'll Start Testing</strong>
+                <p>Testing begins within 24 hours after we receive your details</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Quick Action Buttons */}
+        {/* Quick Action Buttons - Large CTA Buttons */}
         <div className="quick-actions">
-          <h4>📱 Send us your details</h4>
+          <h3>📱 Send us your details</h3>
           <div className="action-buttons">
             <button className="action-btn whatsapp-btn" onClick={handleWhatsAppClick}>
               <i className="fab fa-whatsapp"></i>
-              Send via WhatsApp
-              <span className="action-sub">Quickest response</span>
+              <div className="action-content">
+                <span className="action-title">Send via WhatsApp</span>
+                <span className="action-sub">Fastest response (usually within minutes)</span>
+              </div>
             </button>
             <button className="action-btn email-btn" onClick={handleEmailClick}>
               <i className="fas fa-envelope"></i>
-              Send via Email
-              <span className="action-sub">support@testflighttesters.com</span>
+              <div className="action-content">
+                <span className="action-title">Send via Email</span>
+                <span className="action-sub">support@testflighttesters.com</span>
+              </div>
             </button>
           </div>
         </div>
@@ -251,15 +311,15 @@ Thank you!
             <div className="send-item">
               <i className="fas fa-link"></i>
               <div>
-                <strong>TestFlight Link</strong>
+                <strong>🔗 TestFlight Link</strong>
                 <p>Your app's public TestFlight invitation link</p>
               </div>
             </div>
             <div className="send-item">
               <i className="fas fa-envelope"></i>
               <div>
-                <strong>Email Address</strong>
-                <p>Where we should send reports and updates</p>
+                <strong>📧 Contact Email</strong>
+                <p>Where you'd like to receive QA reports</p>
                 {orderData.customerEmail && (
                   <p style={{ fontSize: "0.8rem", color: "var(--primary)" }}>
                     Using: {orderData.customerEmail}
@@ -268,9 +328,23 @@ Thank you!
               </div>
             </div>
             <div className="send-item">
+              <i className="fas fa-bullseye"></i>
+              <div>
+                <strong>🎯 Features to Focus On</strong>
+                <p>Tell us which features to prioritize testing</p>
+              </div>
+            </div>
+            <div className="send-item">
+              <i className="fas fa-pen"></i>
+              <div>
+                <strong>📝 Extra Notes</strong>
+                <p>Any additional instructions or specific features to test</p>
+              </div>
+            </div>
+            <div className="send-item">
               <i className="fas fa-hashtag"></i>
               <div>
-                <strong>Order ID</strong>
+                <strong>🆔 Order ID</strong>
                 <p>Quote this ID: <span className="order-id-highlight">{orderId}</span></p>
               </div>
             </div>
