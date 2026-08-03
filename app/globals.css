@@ -2313,3 +2313,44 @@ body {
     font-size: 1.6rem;
   }
 }
+
+/* ─── Footer link styles ─── */
+.footer a {
+  color: var(--gray);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.footer a:hover {
+  color: var(--text);
+}
+
+.footer .logo-link {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.footer .logo-link:hover {
+  color: var(--text);
+}
+
+/* Social links */
+.social-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  transition: var(--transition);
+  color: var(--gray);
+}
+
+.social-links a:hover {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  transform: translateY(-3px);
+}
