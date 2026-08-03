@@ -10,15 +10,11 @@
   },
   "dependencies": {
     "@paypal/react-paypal-js": "^8.1.0",
-    "html2canvas": "^1.4.1",
-    "jspdf": "^2.5.1",
     "next": "16.0.0",
     "react": "19.0.0",
     "react-dom": "19.0.0"
   },
   "devDependencies": {
-    "@types/html2canvas": "^1.0.0",
-    "@types/jspdf": "^2.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
