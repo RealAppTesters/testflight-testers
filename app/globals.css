@@ -438,6 +438,239 @@ body {
   }
 }
 
+/* ─── Quick Action Buttons - Large CTA ─── */
+.quick-actions {
+  margin-bottom: 32px;
+}
+
+.quick-actions h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.action-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg);
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+  text-decoration: none;
+  text-align: left;
+}
+
+.action-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+.action-btn i {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.action-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.action-title {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.action-sub {
+  font-size: 0.8rem;
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+/* WhatsApp Button */
+.action-btn.whatsapp-btn {
+  background: #25D366;
+  border-color: #25D366;
+  color: white;
+}
+
+.action-btn.whatsapp-btn:hover {
+  background: #1da851;
+  border-color: #1da851;
+}
+
+.action-btn.whatsapp-btn .action-sub {
+  opacity: 0.9;
+}
+
+/* Email Button */
+.action-btn.email-btn {
+  background: var(--dark);
+  border-color: var(--dark);
+  color: white;
+}
+
+.action-btn.email-btn:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.action-btn.email-btn .action-sub {
+  opacity: 0.8;
+}
+
+/* ─── Priority Tags ─── */
+.priority-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.priority-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(108, 60, 224, 0.06);
+  border: 1px solid rgba(108, 60, 224, 0.12);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text);
+  transition: var(--transition);
+}
+
+.priority-tag:hover {
+  background: rgba(108, 60, 224, 0.12);
+  border-color: var(--primary);
+}
+
+.priority-tag.highlight {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.priority-tag.highlight:hover {
+  background: var(--primary-light);
+}
+
+/* ─── What to Send ─── */
+.what-to-send {
+  background: rgba(108, 60, 224, 0.04);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 32px;
+  border: 1px solid rgba(108, 60, 224, 0.08);
+}
+
+.what-to-send h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.send-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.send-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 8px 0;
+}
+
+.send-item i {
+  font-size: 1.2rem;
+  color: var(--primary);
+  width: 28px;
+  text-align: center;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.send-item div {
+  flex: 1;
+}
+
+.send-item div strong {
+  display: block;
+  font-size: 0.95rem;
+  margin-bottom: 2px;
+}
+
+.send-item div p {
+  font-size: 0.85rem;
+  color: var(--gray);
+  margin: 0;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .action-buttons {
+    grid-template-columns: 1fr;
+  }
+
+  .action-btn {
+    padding: 16px 20px;
+  }
+
+  .action-btn i {
+    font-size: 1.6rem;
+  }
+
+  .action-title {
+    font-size: 0.95rem;
+  }
+
+  .priority-tags {
+    gap: 6px;
+  }
+
+  .priority-tag {
+    font-size: 0.7rem;
+    padding: 3px 10px;
+  }
+
+  .send-item {
+    padding: 6px 0;
+  }
+
+  .send-item i {
+    font-size: 1rem;
+    width: 24px;
+  }
+
+  .send-item div strong {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .action-btn {
+    flex-direction: column;
+    text-align: center;
+    padding: 16px;
+  }
+
+  .action-content {
+    align-items: center;
+  }
+}
+
+
 /* ─── Payment Success Page ─── */
 .payment-success-container {
   min-height: 100vh;
