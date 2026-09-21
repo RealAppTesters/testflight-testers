@@ -3,35 +3,34 @@ export default function Hero() {
     <section className="hero">
       <div>
         <div className="hero-badge">
-          <i className="fas fa-check-circle"></i> Trusted by 500+ developers
+          <i className="fas fa-rocket"></i> Now accepting new projects
         </div>
         <h1>
-          Launch Better iOS Apps with<br />
-          <span className="highlight">Professional TestFlight</span> QA Testing
+          TestFlight Testers<br />
+          <span className="highlight">for iOS</span> App Testing
         </h1>
         <p>
-          Real iPhone and iPad users test your app, uncover bugs, validate user experience,
-          and provide detailed QA reports before you submit to the App Store.
+          Get real iPhone and iPad testers to test your app through TestFlight. Find bugs, validate features, test user experience, and receive detailed QA feedback before your App Store launch.
         </p>
         <div className="hero-actions">
-          <a href="#" className="btn-primary">
+          <a href="#pricing" className="btn-primary">
             <i className="fas fa-rocket"></i> Start Testing
           </a>
-          <a href="#" className="btn-outline">
+          <a href="#services" className="btn-outline">
             <i className="fas fa-play-circle"></i> See how it works
           </a>
         </div>
         <div className="hero-stats">
-          <div><strong>500+</strong><span>Projects tested</span></div>
           <div><strong>24h</strong><span>Avg. start time</span></div>
-          <div><strong>98%</strong><span>Satisfaction rate</span></div>
+          <div><strong>Real</strong><span>Devices only</span></div>
+          <div><strong>Detailed</strong><span>QA reports</span></div>
         </div>
       </div>
 
       <div className="hero-visual">
         <div className="mockup-header">
-          <h4><i className="fas fa-folder-open" style={{ color: "var(--primary)" }}></i> Budget Tracker</h4>
-          <span className="mockup-badge"><span className="dot"></span> Testing</span>
+          <h4><i className="fas fa-folder-open" style={{ color: "var(--primary)" }}></i> Example QA Report</h4>
+          <span className="mockup-badge"><span className="dot"></span> Live preview</span>
         </div>
         <div className="mockup-grid">
           <div className="mockup-card">
