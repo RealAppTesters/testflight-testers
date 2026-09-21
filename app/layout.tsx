@@ -4,16 +4,18 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "TestFlight Testers | iOS App Testing & Beta Testing",
   description:
-    "Get Real iPhone and iPad users test your app, uncover bugs, validate user experience, and provide detailed QA reports before you submit to the App Store.",
+    "Get real TestFlight testers for your iOS app. Test iPhone and iPad apps for bugs, UX, performance and functionality with detailed QA feedback.",
   keywords:
-    "TestFlight, QA testing, iOS testing, app testing, bug hunting, UX testing, iPhone testing, iPad testing",
+    "TestFlight testers, iOS app testing, iOS beta testers, iPhone app testing, TestFlight beta testing, iOS QA testing",
   authors: [{ name: "TestFlightTesters" }],
+  metadataBase: new URL("https://testflighttesters.com"),
+  alternates: {
+    canonical: "https://testflighttesters.com",
+  },
   openGraph: {
     title: "TestFlight Testers | iOS App Testing & Beta Testing",
     description:
-      "Get real TestFlight testers for your iOS app. 
-Test iPhone and iPad apps for bugs, UX, performance and 
-functionality with detailed QA feedback.",
+      "Get real TestFlight testers for your iOS app. Test iPhone and iPad apps for bugs, UX, performance and functionality with detailed QA feedback.",
     url: "https://testflighttesters.com",
     siteName: "TestFlightTesters",
     locale: "en_US",
@@ -23,9 +25,7 @@ functionality with detailed QA feedback.",
     card: "summary_large_image",
     title: "TestFlight Testers | iOS App Testing & Beta Testing",
     description:
-      "Get real TestFlight testers for your iOS app. 
-Test iPhone and iPad apps for bugs, UX, performance and 
-functionality with detailed QA feedback.",
+      "Get real TestFlight testers for your iOS app. Test iPhone and iPad apps for bugs, UX, performance and functionality with detailed QA feedback.",
   },
   robots: {
     index: true,
