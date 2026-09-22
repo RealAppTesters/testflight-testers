@@ -48,12 +48,6 @@ export default function Home() {
 
       {/* Services section with ID */}
       <div className="container" id="services">
-        <h2 className="section-title">
-          <span className="stripe"></span> What Each Test Covers
-        </h2>
-        <p className="section-sub">
-          Every testing type is performed by real testers on real Apple devices.
-        </p>
         <TestingTypes />
       </div>
 
