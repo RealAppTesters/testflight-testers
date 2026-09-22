@@ -2563,3 +2563,40 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* ─── Testing Types SEO Headings ─── */
+.testing-type-card .testing-type-h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.testing-type-card h4 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gray);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.testing-types-cta {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 1rem;
+  color: var(--gray);
+}
+
+.testing-types-link {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.testing-types-link:hover {
+  color: var(--primary-light);
+  text-decoration: underline;
+}
