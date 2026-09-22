@@ -1,11 +1,14 @@
+import Link from "next/link";
+
 export default function TestingTypes() {
   const types = [
     {
       icon: "fa-cogs",
+      h3: "iOS App Functionality Testing",
       title: "App Functionality",
       price: "$10 / tester / hour",
       description:
-        "Testers verify that every feature works as expected. They follow your user flows, click every button, and validate core functionality.",
+        "Our testers verify that every feature in your iOS app works as expected. They follow your user flows step by step, tap every button, and validate that core functionality performs correctly on real iPhones and iPads — not simulators.",
       items: [
         "Onboarding & sign-up flows",
         "Core feature validation",
@@ -16,10 +19,11 @@ export default function TestingTypes() {
     },
     {
       icon: "fa-users",
+      h3: "iOS UX Testing",
       title: "User Experience",
       price: "$10 / tester / hour",
       description:
-        "Testers evaluate how intuitive and enjoyable your app is. They provide feedback on design, flow, and overall user satisfaction.",
+        "Real iPhone and iPad users evaluate how intuitive and enjoyable your app feels. They provide honest feedback on design, navigation flow, and overall user satisfaction — the kind of insight you can only get from real people using real devices.",
       items: [
         "Design & visual feedback",
         "Flow & navigation suggestions",
@@ -30,10 +34,11 @@ export default function TestingTypes() {
     },
     {
       icon: "fa-bug",
+      h3: "iOS Bug Testing",
       title: "Bug Hunting",
       price: "$10 / tester / hour",
       description:
-        "Testers actively search for bugs, crashes, and edge-case issues. They document every issue with steps to reproduce and screenshots.",
+        "Testers actively hunt for bugs, crashes, and edge-case issues inside your TestFlight build. Every bug is documented with clear steps to reproduce, screenshots, and device details so your team can fix it fast.",
       items: [
         "Crash detection & reporting",
         "Edge-case validation",
@@ -44,10 +49,11 @@ export default function TestingTypes() {
     },
     {
       icon: "fa-tachometer-alt",
+      h3: "iPhone Performance Testing",
       title: "Performance",
       price: "$10 / tester / hour",
       description:
-        "Testers measure and report on app speed, responsiveness, and resource usage across different devices and conditions.",
+        "We measure how your iOS app performs under real-world conditions. Testers report on launch speed, responsiveness, memory usage, and battery impact across multiple iPhone and iPad models so you can optimize before launch.",
       items: [
         "App launch time",
         "Screen transition speed",
@@ -58,10 +64,11 @@ export default function TestingTypes() {
     },
     {
       icon: "fa-globe",
+      h3: "iOS Localization Testing",
       title: "Localization",
       price: "$10 / tester / hour",
       description:
-        "Testers verify that your app works correctly in different languages and regions. They check translations, formatting, and cultural nuances.",
+        "Our testers verify your iOS app works correctly across different languages and regions. They check translation accuracy, date and number formatting, text truncation, and cultural appropriateness before you ship globally.",
       items: [
         "Translation accuracy",
         "Date & time formatting",
@@ -72,10 +79,11 @@ export default function TestingTypes() {
     },
     {
       icon: "fa-universal-access",
+      h3: "iOS Accessibility Testing",
       title: "Accessibility",
       price: "$10 / tester / hour",
       description:
-        "Testers ensure your app is usable by everyone, including people with disabilities. They test with VoiceOver, Dynamic Type, and more.",
+        "We test your iOS app with VoiceOver, Dynamic Type, and other accessibility features to ensure it's usable by everyone. Accessibility is not just good practice — it expands your audience and helps with App Store approval.",
       items: [
         "VoiceOver compatibility",
         "Dynamic Type scaling",
@@ -87,20 +95,42 @@ export default function TestingTypes() {
   ];
 
   return (
-    <div className="testing-types-grid">
-      {types.map((type, index) => (
-        <div className="testing-type-card" key={index}>
-          <div className="icon"><i className={`fas ${type.icon}`}></i></div>
-          <h4>{type.title}</h4>
-          <div className="price-badge">{type.price}</div>
-          <p>{type.description}</p>
-          <ul>
-            {type.items.map((item, i) => (
-              <li key={i}><i className="fas fa-check"></i> {item}</li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </div>
+    <section>
+      <h2 className="section-title">
+        <span className="stripe"></span> What Do TestFlight Testers Test?
+      </h2>
+      <p className="section-sub">
+        Every testing type is performed by real testers on real Apple devices. 
+        Here's exactly what our iOS app testers check inside your TestFlight build.
+      </p>
+
+      <div className="testing-types-grid">
+        {types.map((type, index) => (
+          <div className="testing-type-card" key={index}>
+            <div className="icon">
+              <i className={`fas ${type.icon}`}></i>
+            </div>
+            <h3 className="testing-type-h3">{type.h3}</h3>
+            <h4>{type.title}</h4>
+            <div className="price-badge">{type.price}</div>
+            <p>{type.description}</p>
+            <ul>
+              {type.items.map((item, i) => (
+                <li key={i}>
+                  <i className="fas fa-check"></i> {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <p className="testing-types-cta">
+        Want to know more about hiring professional testers?{" "}
+        <Link href="/testflight-testers" className="testing-types-link">
+          Read our full TestFlight testers guide →
+        </Link>
+      </p>
+    </section>
   );
 }
