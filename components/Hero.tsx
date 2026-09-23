@@ -1,3 +1,4 @@
+import Link from "next/link";
 export default function Hero() {
   return (
     <section className="hero">
@@ -13,9 +14,9 @@ export default function Hero() {
           Get real iPhone and iPad testers to test your app through TestFlight. Find bugs, validate features, test user experience, and receive detailed QA feedback before your App Store launch.
         </p>
         <div className="hero-actions">
-          <a href="#pricing" className="btn-primary">
+          <Link href="/pricing" className="btn-primary">
             <i className="fas fa-rocket"></i> Start Testing
-          </a>
+          </Link>
           <a href="#services" className="btn-outline">
             <i className="fas fa-play-circle"></i> See how it works
           </a>
