@@ -61,13 +61,7 @@ export default function Navbar() {
         <Link href="/pricing" className="order-btn">
           Get Testers <i className="fas fa-arrow-right"></i>
         </Link>
-        <a 
-          href="#faq" 
-          onClick={(e) => scrollToSection(e, "faq")}
-          className={activeSection === "faq" ? "active" : ""}
-        >
-          FAQ
-        </a>
+        <Link href="/faq">FAQ</Link>
         <a 
           href="#contact" 
           onClick={(e) => scrollToSection(e, "contact")}
@@ -75,9 +69,9 @@ export default function Navbar() {
         >
           Contact
         </a>
-        <a href="#pricing" className="order-btn" onClick={(e) => scrollToSection(e, "pricing")}>
+        <Link href="/pricing" className="order-btn">
           Get Testers <i className="fas fa-arrow-right"></i>
-        </a>
+        </Link>
       </div>
     </nav>
   );
