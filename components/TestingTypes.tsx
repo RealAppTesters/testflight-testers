@@ -129,10 +129,14 @@ export default function TestingTypes() {
         Want to know more? Read our guides on{" "}
         <Link href="/testflight-testers" className="testing-types-link">
           TestFlight testers
-        </Link>{" "}
-        and{" "}
+        </Link>
+        ,{" "}
         <Link href="/ios-app-testing" className="testing-types-link">
           iOS app testing
+        </Link>
+        , and{" "}
+        <Link href="/ios-beta-testers" className="testing-types-link">
+          iOS beta testers
         </Link>
         .
       </p>
