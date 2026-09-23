@@ -2657,3 +2657,52 @@ body {
   gap: 20px;
   margin: 24px 0;
 }
+
+/* ─── Pricing Quick Facts (homepage) ─── */
+.pricing-quick-facts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 48px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.quick-fact {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.quick-fact:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--primary-light);
+}
+
+.quick-fact strong {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 4px;
+  letter-spacing: -0.02em;
+}
+
+.quick-fact span {
+  font-size: 0.9rem;
+  color: var(--gray);
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .pricing-quick-facts {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
