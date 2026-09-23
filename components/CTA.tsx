@@ -1,3 +1,4 @@
+import Link from "next/link";
 export default function CTA() {
   return (
     <section className="cta-section" id="contact">
