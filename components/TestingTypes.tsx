@@ -134,9 +134,13 @@ export default function TestingTypes() {
         <Link href="/ios-app-testing" className="testing-types-link">
           iOS app testing
         </Link>
-        , and{" "}
+        ,{" "}
         <Link href="/ios-beta-testers" className="testing-types-link">
           iOS beta testers
+        </Link>
+        , and{" "}
+        <Link href="/iphone-app-testing" className="testing-types-link">
+          iPhone app testing
         </Link>
         .
       </p>
