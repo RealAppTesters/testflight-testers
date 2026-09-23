@@ -58,13 +58,9 @@ export default function Navbar() {
         >
           Services
         </a>
-        <a 
-          href="#pricing" 
-          onClick={(e) => scrollToSection(e, "pricing")}
-          className={activeSection === "pricing" ? "active" : ""}
-        >
-          Pricing
-        </a>
+        <Link href="/pricing" className="order-btn">
+          Get Testers <i className="fas fa-arrow-right"></i>
+        </Link>
         <a 
           href="#faq" 
           onClick={(e) => scrollToSection(e, "faq")}
