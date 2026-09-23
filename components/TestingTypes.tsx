@@ -126,10 +126,15 @@ export default function TestingTypes() {
       </div>
 
       <p className="testing-types-cta">
-        Want to know more about hiring professional testers?{" "}
+        Want to know more? Read our guides on{" "}
         <Link href="/testflight-testers" className="testing-types-link">
-          Read our full TestFlight testers guide →
+          TestFlight testers
+        </Link>{" "}
+        and{" "}
+        <Link href="/ios-app-testing" className="testing-types-link">
+          iOS app testing
         </Link>
+        .
       </p>
     </section>
   );
