@@ -19,10 +19,10 @@ export default function Footer() {
       
       <div>
         <h5>Company</h5>
-        <Link href="#services">Services</Link>
-        <Link href="#pricing">Pricing</Link>
-        <Link href="#faq">FAQ</Link>
-        <Link href="#contact">Contact</Link>
+        <Link href="/#services">Services</Link>
+        <Link href="/pricing">Pricing</Link>
+        <Link href="/faq">FAQ</Link>
+        <Link href="/#contact">Contact</Link>
       </div>
       
       <div>

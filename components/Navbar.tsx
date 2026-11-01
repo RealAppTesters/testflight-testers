@@ -30,9 +30,9 @@ export default function Navbar() {
   }, []);
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
     const element = document.getElementById(id);
     if (element) {
+      e.preventDefault();
       element.scrollIntoView({ behavior: "smooth" });
       setIsOpen(false);
     }
@@ -52,7 +52,7 @@ export default function Navbar() {
       </button>
       <div className={`nav-links ${isOpen ? "open" : ""}`}>
         <a 
-          href="#services" 
+          href="/#services"
           onClick={(e) => scrollToSection(e, "services")}
           className={activeSection === "services" ? "active" : ""}
         >
@@ -62,8 +62,12 @@ export default function Navbar() {
           Get Testers <i className="fas fa-arrow-right"></i>
         </Link>
         <Link href="/faq">FAQ</Link>
+        <Link href="/how-we-test">How We Test</Link>
+        <Link href="/case-studies">Case Studies</Link>
+        <Link href="/blog">Blog</Link>
+        <Link href="/dashboard">Dashboard</Link>
         <a 
-          href="#contact" 
+          href="/#contact"
           onClick={(e) => scrollToSection(e, "contact")}
           className={activeSection === "contact" ? "active" : ""}
         >

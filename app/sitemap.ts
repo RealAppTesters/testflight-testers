@@ -1,3 +1,5 @@
+import { articles } from "@/lib/articles";
+import { caseStudies } from "@/lib/case-studies";
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -5,6 +7,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
   return [
+    ...["blog", "how-we-test", "case-studies", ...articles.map(a=>`blog/${a.slug}`), ...caseStudies.map(c=>`case-studies/${c.slug}`)].map(path=>({url:`${baseUrl}/${path}`,lastModified:now})),
     { url: `${baseUrl}/`, lastModified: now, changeFrequency: "weekly", priority: 1.0 },
     { url: `${baseUrl}/pricing`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${baseUrl}/faq`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },

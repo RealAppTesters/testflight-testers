@@ -36,6 +36,7 @@ export default function PaymentPage() {
     phone: "",
   });
   const [paypalLoaded, setPaypalLoaded] = useState(false);
+  const [capturedReference, setCapturedReference] = useState("");
   const paypalContainerRef = useRef<HTMLDivElement>(null);
 
   const PAYPAL_CLIENT_ID = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "sb";
@@ -96,25 +97,15 @@ export default function PaymentPage() {
         shape: "rect",
         label: "pay",
       },
-      createOrder: (data: any, actions: any) => {
-        return actions.order.create({
-          purchase_units: [
-            {
-              amount: {
-                value: orderData.total.toFixed(2),
-                currency_code: "USD",
-              },
-              description: `${orderData.typeLabel} - ${orderData.testers} testers × ${orderData.hours}h`,
-            },
-          ],
-          application_context: {
-            shipping_preference: "NO_SHIPPING",
-          },
-        });
+      createOrder: async () => {
+        const response = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderData) });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || 'Unable to start checkout');
+        return result.id;
       },
       onApprove: (data: any, actions: any) => {
         return actions.order.capture().then((details: any) => {
-          handlePaymentSuccess(details);
+          return handlePaymentSuccess(details);
         });
       },
       onError: (error: any) => {
@@ -123,15 +114,17 @@ export default function PaymentPage() {
     }).render(paypalContainerRef.current);
   }, [paypalLoaded, orderData]);
 
-  const handlePaymentSuccess = (details: any) => {
+  const handlePaymentSuccess = async (details: any) => {
+    setCapturedReference(details.id);
+    try {
+    const response = await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ paypalOrderId: details.id }) });
+    const verified = await response.json();
+    if (!response.ok) throw new Error(verified.error || "Unable to verify payment");
     setPaymentStatus("success");
 
     // Store order with customer details and generated ID
     if (orderData) {
-      const orderId = `TFT-${Date.now().toString().slice(-6)}-${Math.random()
-        .toString(36)
-        .substring(2, 6)
-        .toUpperCase()}`;
+      const orderId = verified.orderId;
       const completeOrderData = {
         ...orderData,
         orderId: orderId,
@@ -147,6 +140,10 @@ export default function PaymentPage() {
 
     // Redirect to success page
     router.push("/payment/success");
+    } catch {
+      setPaymentStatus("error");
+      setErrorMessage(`PayPal captured your payment, but we could not finish synchronizing the order. Please do not pay again. Contact support@testflighttesters.com with PayPal reference ${details.id}, or check your dashboard after signing in with your PayPal email.`);
+    }
   };
 
   const handlePaymentError = (error: any) => {
@@ -325,7 +322,7 @@ export default function PaymentPage() {
         <div 
           ref={paypalContainerRef}
           className="paypal-container"
-          style={{ minHeight: "100px" }}
+          style={{ minHeight: capturedReference ? "0" : "100px", display: capturedReference ? "none" : undefined }}
         >
           {!paypalLoaded && (
             <div className="paypal-loading">
