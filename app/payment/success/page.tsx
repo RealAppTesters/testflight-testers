@@ -351,6 +351,7 @@ ${orderData.customerName || 'Your Name'}`;
           </div>
         </div>
 
+        <div className="success-actions"><Link href="/dashboard" className="btn-primary">Open my dashboard →</Link></div>
         {/* Return Home */}
         <div className="success-actions">
           <Link href="/" className="btn-primary home-btn">
